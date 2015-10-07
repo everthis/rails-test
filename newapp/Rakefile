@@ -1,0 +1,50 @@
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
+
+# require File.expand_path('../config/application', __FILE__)
+
+# Rails.application.load_tasks
+# 
+
+task :default => :third_task
+
+task :first_task do
+  puts "First task"
+end
+
+task :second_task do
+  puts ">>Second task"
+end
+
+task :third_task => [:first_task, :second_task] do
+  puts ">>>>Hurray. This is the third task"
+  puts " This task depends on the first_task and second_task and won’t be executed unless both the dependencies are satisfied."
+  print "The syntax for declaring dependency is "
+  puts " :main_task => :dependency"
+  puts "and if there are more than 1 dependency, place all the dependencies inside the [] separated by commas "
+  puts ":main_task => [:dep1, :dep2]"
+end
+
+namespace :main do
+  task :test do
+    if true
+      puts "Calling test2 task."
+      Rake::Task["main:test2"].invoke #invokes main:test2
+    else
+      abort()
+    end
+  end
+
+  task :test2 do
+      puts ">Test2 task invoked"
+  end
+end
+
+task :tests, [:arg1, :arg2] do |t, args|
+  puts "First argument: #{ args[:arg1] }"
+  puts "Second argument: #{args[:arg2]}"
+end
+
+task :my_task, [:arg1, :arg2] do |t, args|
+  puts "Args were: #{args}"
+end
